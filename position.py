@@ -6,6 +6,9 @@ class Vector2:
         self.x = x
         self.y = y
         
+    def __str__(self):
+        return "Vector2(" + str(self.getX()) + ", " + str(self.getY()) + ")"
+        
     def getX(self):
         return self.x
     
@@ -23,10 +26,10 @@ class Vector2:
         return sqrt((self.getX() - vector.getX())**2 + (self.getY() - vector.getY())**2)
     
     def distanceX(self, vector):
-        return (self.getX() + vector.getX()) / 2
+        return vector.getX() - self.getX()
     
     def distanceY(self, vector):
-        return (self.getY() + vector.getY()) / 2
+        return vector.getY() - self.getY()
     
         
 class Vector3:
@@ -35,6 +38,9 @@ class Vector3:
         self.x = x
         self.y = y
         self.z = z
+        
+    def __str__(self):
+        return "Vector3(" + str(self.getX()) + ", " + str(self.getY()) +  + ", " + str(self.getZ()) + ")"
         
     def getX(self):
         return self.x

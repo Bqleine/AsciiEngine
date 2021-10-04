@@ -24,25 +24,40 @@ class Line(Object):
     def __init__(self, startPoint, endPoint):
         self.startPoint = startPoint
         self.endPoint = endPoint
-
+        
     def tick(self, deltaTime, timePassed):
-        self.endPoint.setX(self.endPoint.getX() + sin(0.1 * timePassed) * deltaTime)
-        self.endPoint.setY(self.endPoint.getY() + sin(0.3 * timePassed) * deltaTime)
-        
+        #self.endPoint.setY(self.endPoint.getY() + (sin(timePassed) * 3))
+        pass
+    
     def draw(self, screen):
-        distance = self.startPoint.distance(self.endPoint)
+        dx = self.startPoint.distanceX(self.endPoint)
+        dy = self.startPoint.distanceY(self.endPoint)
         
-        stepX = (self.startPoint.getX() + self.endPoint.getX()) / distance
-        stepY = (self.startPoint.getY() + self.endPoint.getY()) / distance
-        
-        if stepX == 0:
-            direction = "|"
-        elif stepY == 0:
-            direction = "-"
-        elif ((stepX > 0 and stepY) > 0 or (stepX < 0 and stepY < 0)):
-            direction = "\\"
+        if (abs(dx) > abs(dy)):
+            pixels = int(dx)
         else:
-            direction = "/"
+            pixels = int(dy)
             
-        for i in range(round(distance)):
-            screen[int(i*stepY)][int(i*stepX)] = direction
+        if pixels == 0: return
+        
+        if dy > 0:
+            origin = self.startPoint
+        else:
+            origin = self.endPoint
+                    
+        stepX = dx / pixels
+        stepY = dy / pixels
+        
+        if stepY == 0:
+            character = "-"
+        elif stepX == 0:
+            character = "|"
+        elif stepX > 0:
+            character = "\\"
+        else:
+            character = "/"
+        
+        for i in range(abs(pixels)):
+            position = Vector2(i * stepX + origin.getX(), i * stepY + origin.getY())
+
+            screen[int(position.getY())][int(position.getX())] = character
