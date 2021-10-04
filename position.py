@@ -20,6 +20,9 @@ class Vector2:
         
     def setY(self, y):
         self.y = y
+        
+    def add(self, vector):
+        return Vector2(self.getX() + vector.getX(), self.getY() + vector.getY())
     
     # sqrt((x2-x1)^2 + (y2 - y1)^2)
     def distance(self, vector):

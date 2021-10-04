@@ -8,7 +8,8 @@ from os import get_terminal_size
 fps = 10
 
 objects = []
-objects.append(Text("Hello, World!", 5, 5))
+objects.append(Text("Hello, World!", 5, 30))
+objects.append(Rectangle(Vector2(5, 5), Vector2(20, 10)))
 
 lastFrame = monotonic()
 
