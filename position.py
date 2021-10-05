@@ -1,64 +1,42 @@
-from math import sqrt
+from math import sqrt, exp
 
-class Vector2:
-    
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        
-    def __str__(self):
-        return "Vector2(" + str(self.getX()) + ", " + str(self.getY()) + ")"
-        
-    def getX(self):
-        return self.x
-    
-    def getY(self):
-        return self.y
-    
-    def setX(self, x):
-        self.x = x
-        
-    def setY(self, y):
-        self.y = y
-        
-    def add(self, vector):
-        return Vector2(self.getX() + vector.getX(), self.getY() + vector.getY())
-    
-    # sqrt((x2-x1)^2 + (y2 - y1)^2)
-    def distance(self, vector):
-        return sqrt((self.getX() - vector.getX())**2 + (self.getY() - vector.getY())**2)
-    
-    def distanceX(self, vector):
-        return vector.getX() - self.getX()
-    
-    def distanceY(self, vector):
-        return vector.getY() - self.getY()
-    
-        
 class Vector3:
     
-    def __init__(self, x, y, z):
+    def __init__(self, x=0, y=0, z=0):
         self.x = x
         self.y = y
         self.z = z
         
     def __str__(self):
-        return "Vector3(" + str(self.getX()) + ", " + str(self.getY()) +  + ", " + str(self.getZ()) + ")"
+        return "Vector3(" + str(self.x) + ", " + str(self.y) +  + ", " + str(self.z) + ")"
+
+    # sqrt((x2-x1)^2 + (y2 - y1)^2)
+    def distance(self, vector):
+        return sqrt((self.x - vector.x) ** 2 + (self.y - vector.y) ** 2)
+
+    def distanceX(self, vector):
+        return vector.x - self.x
+
+    def distanceY(self, vector):
+        return vector.y - self.y
+
+    def distanceZ(self, vector):
+        return vector.z - self.z
+
+    def add(self, vector):
+        return Vector3(self.x + vector.x, self.y + vector.y, self.z + vector.z)
         
-    def getX(self):
-        return self.x
-    
-    def getY(self):
-        return self.y
-    
-    def getZ(self):
-        return self.z
-    
-    def setX(self, x):
-        self.x = x
-        
-    def setY(self, y):
-        self.y = y
-        
-    def setZ(self, z):
-        self.z = z
+    def applyPerspective(self, camera):
+
+        visible = True
+
+        vanishingPoint = camera.perspective.getVanishingPoint()
+        offsetPercentage = 1/(exp(self.z / camera.perspective.ratio))
+
+        x = (self.x - vanishingPoint.x) * offsetPercentage - vanishingPoint.x + camera.position.x
+        y = (self.y - vanishingPoint.y) * offsetPercentage - vanishingPoint.y + camera.position.y
+
+        if self.z < camera.position.z:
+            visible = False
+
+        return [Vector3(x, y, self.z), visible]

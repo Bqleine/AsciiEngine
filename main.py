@@ -1,48 +1,13 @@
-from time import monotonic
+from camera import *
 from objects import *
-from copy import deepcopy
-from os import get_terminal_size
+from perspective import *
+from window import *
 
-# Main
+camera = Camera(LinearPerspective("center"), Vector3(0, 0, 0))
 
-fps = 10
+window = Window(10, camera)
 
-objects = []
-objects.append(Text("Hello, World!", 5, 30))
-objects.append(Rectangle(Vector2(5, 5), Vector2(20, 10)))
+window.addObject(Text("Hello, World!", 5, 10))
+window.addObject(Square(Vector3(25, 25), 25))
 
-lastFrame = monotonic()
-
-timePassed = 0
-
-run = True
-while run:
-    
-    # Limit fps
-    time = monotonic()
-    if lastFrame > time - (1 / fps):
-        continue
-    
-    lastFrame = monotonic()
-    #print("Frame:", time)
-    
-    # Update screen size and clear screen
-    terminalSize = get_terminal_size()
-    screen = [[" " for x in range(terminalSize.columns)] for y in range(terminalSize.lines)]
-    
-    # Tick objects
-    for obj in objects:
-        obj.tick(30/fps, timePassed)
-    timePassed += 1
-    
-    # Draw objects
-    for obj in objects:
-        obj.draw(screen)
-    
-    # Draw screen
-    output = ""
-    for x in screen:
-        output += "\n"
-        for y in x:
-            output += y
-    print(output, end="")
+window.main()
