@@ -8,7 +8,7 @@ class Vector3:
         self.z = z
         
     def __str__(self):
-        return "Vector3(" + str(self.x) + ", " + str(self.y) +  + ", " + str(self.z) + ")"
+        return "Vector3(" + str(self.x) + ", " + str(self.y) + ", " + str(self.z) + ")"
 
     # sqrt((x2-x1)^2 + (y2 - y1)^2)
     def distance(self, vector):
@@ -33,8 +33,8 @@ class Vector3:
         vanishingPoint = camera.perspective.getVanishingPoint()
         offsetPercentage = 1/(exp(self.z / camera.perspective.ratio))
 
-        x = (self.x - vanishingPoint.x) * offsetPercentage - vanishingPoint.x + camera.position.x
-        y = (self.y - vanishingPoint.y) * offsetPercentage - vanishingPoint.y + camera.position.y
+        x = (self.x - vanishingPoint.x) * offsetPercentage + vanishingPoint.x + camera.position.x
+        y = (self.y - vanishingPoint.y) * offsetPercentage + vanishingPoint.y + camera.position.y
 
         if self.z < camera.position.z:
             visible = False
