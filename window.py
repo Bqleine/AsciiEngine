@@ -1,6 +1,7 @@
 from time import monotonic
 import os
 import curses
+from math import floor
 
 class Window:
 
@@ -21,7 +22,9 @@ class Window:
         curses.noecho()
         curses.cbreak()
 
-        self.window = curses.newwin(curses.LINES - 1, curses.COLS - 1, 0, 0) # TODO : add as args, autoresize
+        self.window = curses.newwin(curses.LINES - 1, curses.COLS - 1, 0, 0)
+
+        self.logs = []
 
         self.objects = []
         self.camera = camera
@@ -42,7 +45,7 @@ class Window:
 
             # Limit FPS
             self.time = monotonic()
-            if self.lastFrame > self.time - (1 / self.targetFps):
+            if self.lastFrame >= self.time - (1 / self.targetFps):
                 continue
 
             self.tick()
@@ -84,9 +87,17 @@ class Window:
         self.objects.append(object)
 
     def drawCharacter(self, character, position, attr=curses.COLOR_WHITE):
-        y = round(position.y)
-        x = round(position.x)
+        y = floor(position.y)
+        x = floor(position.x)
 
-        if x < 0 or x >= self.windowSize[0] or y < 0 or y >= self.windowSize[1]: return
+        if x < 0 or x >= self.windowSize[0] - 1 or y < 0 or y >= self.windowSize[1] - 1: return
 
-        self.window.addch(y, x, character, attr) # TODO : Replace round with math.floor / ceil ?
+        try:
+            self.window.addch(y, x, character, attr)
+        except:
+            self.quit()
+            print("Failed to add character '" + character + "' at coordonitates x=" + str(x) + " y=" + str(y))
+            raise
+
+    def log(self, message):
+        self.logs.append(message)

@@ -1,5 +1,5 @@
 from position import *
-from math import sin, floor
+from math import sin, floor, ceil
 
 class Object:
     
@@ -14,18 +14,14 @@ class Text(Object):
     
     def draw(self, window):
         for i in range(len(self.text)):
-            window.drawCharacter(self.text[i], self.position.add(Vector3(i, 0)))
+            window.drawCharacter(self.text[i], self.position.applyPerspective(window.camera)[0].add(Vector3(i, 0)))
 
 class Line(Object):
     
-    def __init__(self, startPoint, endPoint):
+    def __init__(self, startPoint, endPoint, showPoints=False):
         self.startPoint = startPoint
         self.endPoint = endPoint
-
-    def tick(self, deltaTime, timePassed):
-        self.endPoint = self.endPoint.add(Vector3(0, 0, 1*deltaTime))
-        self.startPoint = self.startPoint.add(Vector3(0, 0, 1*deltaTime))
-        pass
+        self.showPoints = showPoints
     
     def draw(self, window):
         startPoint = self.startPoint.applyPerspective(window.camera)
@@ -37,36 +33,69 @@ class Line(Object):
         startPoint = startPoint[0]
         endPoint = endPoint[0]
 
+        # Bresenham's line algorithm
+        if abs(endPoint.y - startPoint.y) < abs(endPoint.x - startPoint.x):
+            if startPoint.x > endPoint.x:
+                self.plotLineLow(endPoint, startPoint, window)
+            else:
+                self.plotLineLow(startPoint, endPoint, window)
+        else:
+            if startPoint.y > endPoint.y:
+                self.plotLineHigh(endPoint, startPoint, window)
+            else:
+                self.plotLineHigh(startPoint, endPoint, window)
+
+        if self.showPoints:
+            window.drawCharacter("A", startPoint)
+            window.drawCharacter("B", endPoint)
+
+    def plotLineHigh(self, startPoint, endPoint, window):
         dx = startPoint.distanceX(endPoint)
         dy = startPoint.distanceY(endPoint)
-        
-        if (abs(dx) > abs(dy)):
-            pixels = round(dx)
-        else:
-            pixels = round(dy)
-            
-        if pixels == 0: return
-        
-        if dy > 0 or (dy == 0 and dx > 0):
-            origin = startPoint
-        else:
-            origin = endPoint
 
-        stepX = dx / pixels
-        stepY = dy / pixels
-        
-        if stepY == 0:
-            character = "-"
-        elif stepX == 0:
-            character = "|"
-        elif stepX > 0:
-            character = "\\"
-        else:
+        if dx < 0:
+            stepX = -1
+            dx = -dx
             character = "/"
-        
-        for i in range(abs(pixels)):
-            position = Vector3(i * stepX + origin.x, i * stepY + origin.y)
-            window.drawCharacter(character, position)
+        else:
+            stepX = 1
+            character = "\\"
+
+        distance = (2 * dx) - dy
+
+        x = startPoint.x
+
+        for y in range(round(startPoint.y), round(endPoint.y)):
+            window.drawCharacter(character, Vector3(x, y))
+            if distance > 0:
+                x += stepX
+                distance += 2 * (dx - dy)
+            else:
+                distance += 2 * dx
+
+    def plotLineLow(self, startPoint, endPoint, window):
+        dx = startPoint.distanceX(endPoint)
+        dy = startPoint.distanceY(endPoint)
+
+        if dy < 0:
+            stepY = -1
+            dy = -dy
+            character = "/"
+        else:
+            stepY = 1
+            character = "\\"
+
+        distance = (2 * dy) - dx
+
+        y = startPoint.y
+
+        for x in range(round(startPoint.x), round(endPoint.x)):
+            window.drawCharacter(character, Vector3(x, y))
+            if distance > 0:
+                y += stepY
+                distance += 2 * (dy - dx)
+            else:
+                distance += 2 * dy
 
 class Parallelogram(Object):
     
@@ -98,9 +127,9 @@ class Square(Object):
     def draw(self, window):
         
         A = self.position
-        B = self.position.add(Vector3(self.length, 0))
+        B = self.position.add(Vector3(0, self.length))
         C = self.position.add(Vector3(self.length, self.length))
-        D = self.position.add(Vector3(0, self.length))
+        D = self.position.add(Vector3(self.length, 0))
 
         Parallelogram(A, B, C, D).draw(window)
             

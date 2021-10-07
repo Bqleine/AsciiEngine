@@ -7,7 +7,6 @@ class Perspective:
 class LinearPerspective(Perspective):
 
     def __init__(self, vanishingPoint):
-        # TODO : anchor vanishing point from center
         self.vanishingPoint = vanishingPoint
         self.ratio = 100
 
