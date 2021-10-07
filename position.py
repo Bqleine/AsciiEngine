@@ -1,4 +1,4 @@
-from math import sqrt, exp
+from math import sqrt, exp, sin, cos
 
 class Vector3:
     
@@ -40,3 +40,29 @@ class Vector3:
             visible = False
 
         return [Vector3(x, y, self.z), visible]
+
+    def applyRotation(self, rotation, origin):
+
+        point = self.add(Vector3(-origin.x, -origin.y, -origin.z))
+
+        point = point.applyYRotation(rotation).applyXRotation(rotation)
+
+        return point.add(Vector3(origin.x, origin.y, origin.z))
+
+    def applyXRotation(self, rotation):
+        rSin = sin(rotation.yaw)
+        rCos = cos(rotation.yaw)
+
+        y = self.y * rCos - self.z * rSin
+        z = self.z * rCos + self.y * rSin
+
+        return Vector3(self.x, y, z)
+
+    def applyYRotation(self, rotation):
+        rSin = sin(rotation.pitch)
+        rCos = cos(rotation.pitch)
+
+        x = self.x * rCos - self.z * rSin
+        z = self.z * rCos + self.x * rSin
+
+        return Vector3(x, self.y, z)
