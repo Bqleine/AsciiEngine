@@ -10,10 +10,6 @@ class Cube(Object):
         self.rotation = rotation
         self.showPoints = showPoints
 
-    def tick(self, deltaTime, timePassed):
-        self.rotation.pitch += 0.1 * deltaTime
-        self.rotation.yaw += 0.1 * deltaTime
-
     def draw(self, window):
         length = self.length / 2
 

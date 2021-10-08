@@ -1,8 +1,11 @@
+from math import sqrt, exp, sin, cos
 from position import Vector3
-from os import get_terminal_size
+import curses
 
 class Perspective:
-    pass
+
+    def apply(self, point, camera):
+        pass
 
 class LinearPerspective(Perspective):
 
@@ -12,5 +15,23 @@ class LinearPerspective(Perspective):
 
     def getVanishingPoint(self):
         if self.vanishingPoint == "center":
-            terminalSize = get_terminal_size()
-            return Vector3(terminalSize.columns / 2, terminalSize.lines / 2)
+            return Vector3(curses.COLS / 2, curses.LINES / 2)
+
+    def apply(self, point, camera):
+        visible = True
+
+        vanishingPoint = self.getVanishingPoint()
+        offsetPercentage = 1 / (exp(point.z / self.ratio))
+
+        x = (point.x - vanishingPoint.x) * offsetPercentage + vanishingPoint.x + camera.position.x
+        y = (point.y - vanishingPoint.y) * offsetPercentage + vanishingPoint.y + camera.position.y
+
+        if point.z < camera.position.z:
+            visible = False
+
+        return [Vector3(x, y, point.z), visible]
+
+class FlatPerspective(Perspective):
+
+    def apply(self, point, camera):
+        return [Vector3(point.x, point.y, point.z), True]

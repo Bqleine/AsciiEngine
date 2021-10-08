@@ -28,18 +28,7 @@ class Vector3:
         
     def applyPerspective(self, camera):
 
-        visible = True
-
-        vanishingPoint = camera.perspective.getVanishingPoint()
-        offsetPercentage = 1/(exp(self.z / camera.perspective.ratio))
-
-        x = (self.x - vanishingPoint.x) * offsetPercentage + vanishingPoint.x + camera.position.x
-        y = (self.y - vanishingPoint.y) * offsetPercentage + vanishingPoint.y + camera.position.y
-
-        if self.z < camera.position.z:
-            visible = False
-
-        return [Vector3(x, y, self.z), visible]
+        return camera.perspective.apply(self, camera)
 
     def applyRotation(self, rotation, origin):
 
