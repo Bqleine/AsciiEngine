@@ -1,28 +1,14 @@
-from position import *
-from math import sin, floor, ceil
+from src.object import Object
+from src.position import Vector3
 
-class Object:
-    
-    def tick(self, deltaTime, timePassed): pass
-    def draw(self, window): pass
-
-class Text(Object):
-    
-    def __init__(self, text, position):
-        self.position = position
-        self.text = text
-    
-    def draw(self, window):
-        for i in range(len(self.text)):
-            window.drawCharacter(self.text[i], self.position.applyPerspective(window.camera)[0].add(Vector3(i, 0)))
 
 class Line(Object):
-    
+
     def __init__(self, startPoint, endPoint, showPoints=False):
         self.startPoint = startPoint
         self.endPoint = endPoint
         self.showPoints = showPoints
-    
+
     def draw(self, window):
         startPoint = self.startPoint.applyPerspective(window.camera)
         endPoint = self.endPoint.applyPerspective(window.camera)
@@ -59,8 +45,10 @@ class Line(Object):
             character = "/"
         else:
             stepX = 1
-            if dx == 0: character = "|"
-            else: character = "\\"
+            if dx == 0:
+                character = "|"
+            else:
+                character = "\\"
 
         distance = (2 * dx) - dy
 
@@ -84,8 +72,10 @@ class Line(Object):
             character = "/"
         else:
             stepY = 1
-            if dy == 0: character = "-"
-            else: character = "\\"
+            if dy == 0:
+                character = "-"
+            else:
+                character = "\\"
 
         distance = (2 * dy) - dx
 
@@ -98,54 +88,3 @@ class Line(Object):
                 distance += 2 * (dy - dx)
             else:
                 distance += 2 * dy
-
-class Parallelogram(Object):
-    
-    def __init__(self, A, B, C, D):
-        self.A = A
-        self.B = B
-        self.C = C
-        self.D = D
-        
-    def draw(self, window):
-        
-        # Sides go first so it overrides prettier
-        lines = [
-            Line(self.B, self.C),
-            Line(self.D, self.A),
-            Line(self.A, self.B),
-            Line(self.C, self.D),
-        ]
-        
-        for line in lines:
-            line.draw(window)
-            
-class Square(Object):
-    
-    def __init__(self, position, length):
-        self.position = position
-        self.length = length
-    
-    def draw(self, window):
-        
-        A = self.position
-        B = self.position.add(Vector3(0, self.length))
-        C = self.position.add(Vector3(self.length, self.length))
-        D = self.position.add(Vector3(self.length, 0))
-
-        Parallelogram(A, B, C, D).draw(window)
-            
-class Rectangle(Object):
-    
-    def __init__(self, startPoint, endPoint):
-        self.startPoint = startPoint
-        self.endPoint = endPoint
-    
-    def draw(self, window):
-        
-        A = self.startPoint
-        B = Vector3(self.endPoint.x, self.startPoint.y)
-        C = self.endPoint
-        D = Vector3(self.startPoint.x, self.endPoint.y)
-        
-        Parallelogram(A, B, C, D).draw(window)

@@ -1,6 +1,8 @@
-from objects import Object
-from position import Vector3
-from objects import Line, Text
+from src.object import Object
+from src._2d.text import Text
+from src._2d.line import Line
+from src.position import Vector3
+
 
 class Cube(Object):
 
@@ -14,13 +16,13 @@ class Cube(Object):
         length = self.length / 2
 
         A = self.position.add(Vector3(-length, -length, -length)).applyRotation(self.rotation, self.position)
-        B = self.position.add(Vector3( length, -length, -length)).applyRotation(self.rotation, self.position)
-        C = self.position.add(Vector3( length,  length, -length)).applyRotation(self.rotation, self.position)
-        D = self.position.add(Vector3(-length,  length, -length)).applyRotation(self.rotation, self.position)
-        E = self.position.add(Vector3(-length, -length,  length)).applyRotation(self.rotation, self.position)
-        F = self.position.add(Vector3( length, -length,  length)).applyRotation(self.rotation, self.position)
-        G = self.position.add(Vector3( length,  length,  length)).applyRotation(self.rotation, self.position)
-        H = self.position.add(Vector3(-length,  length,  length)).applyRotation(self.rotation, self.position)
+        B = self.position.add(Vector3(length, -length, -length)).applyRotation(self.rotation, self.position)
+        C = self.position.add(Vector3(length, length, -length)).applyRotation(self.rotation, self.position)
+        D = self.position.add(Vector3(-length, length, -length)).applyRotation(self.rotation, self.position)
+        E = self.position.add(Vector3(-length, -length, length)).applyRotation(self.rotation, self.position)
+        F = self.position.add(Vector3(length, -length, length)).applyRotation(self.rotation, self.position)
+        G = self.position.add(Vector3(length, length, length)).applyRotation(self.rotation, self.position)
+        H = self.position.add(Vector3(-length, length, length)).applyRotation(self.rotation, self.position)
 
         lines = [
             Line(A, B),

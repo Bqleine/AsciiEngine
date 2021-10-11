@@ -1,14 +1,14 @@
-from time import monotonic
-import os
 import curses
 from math import floor
+from time import monotonic
+
 
 class Window:
 
     def __init__(self, targetFps, camera):
         self.windowSize = [0, 0]
         self.running = False
-        self.time = 0 # Unified time for objects
+        self.time = 0  # Unified time for objects
         self.lastFrame = 0
         self.targetFps = targetFps
         self.fps = 0
@@ -33,11 +33,10 @@ class Window:
         return [curses.COLS, curses.LINES]
 
     def start(self):
-        curses.wrapper(self.main)
+        self.main()
         self.quit()
 
-
-    def main(self, a):
+    def main(self):
         self.startTime = monotonic()
 
         self.running = True
@@ -68,7 +67,7 @@ class Window:
         self.windowSize = self.getTerminalSize()
 
         for obj in self.objects:
-            obj.tick(30/self.targetFps, self.framesPassed)
+            obj.tick(30 / self.targetFps, self.framesPassed)
 
         self.framesPassed += 1
         self.framesLastSecond += 1
@@ -77,6 +76,7 @@ class Window:
     def updateScreen(self):
 
         self.window.erase()
+        curses.update_lines_cols()
 
         for obj in self.objects:
             obj.draw(self)
@@ -98,6 +98,7 @@ class Window:
             self.quit()
             print("Failed to add character '" + character + "' at coordonitates x=" + str(x) + " y=" + str(y))
             raise
+
 
     def log(self, message):
         self.logs.append(message)

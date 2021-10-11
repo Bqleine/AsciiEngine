@@ -1,4 +1,5 @@
-from objects import Text
+from src._2d.text import Text
+
 
 class FpsDisplay(Text):
 

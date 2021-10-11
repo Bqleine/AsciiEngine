@@ -1,5 +1,7 @@
-from objects import Object, Text
-from position import Vector3
+from src.object import Object
+from src._2d.text import Text
+from src.position import Vector3
+
 
 class LogsDisplay(Object):
 

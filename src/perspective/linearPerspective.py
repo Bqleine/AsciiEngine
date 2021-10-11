@@ -1,11 +1,5 @@
-from math import sqrt, exp, sin, cos
-from position import Vector3
-import curses
+from src.perspective.perspective import Perspective
 
-class Perspective:
-
-    def apply(self, point, camera):
-        pass
 
 class LinearPerspective(Perspective):
 
@@ -30,8 +24,3 @@ class LinearPerspective(Perspective):
             visible = False
 
         return [Vector3(x, y, point.z), visible]
-
-class FlatPerspective(Perspective):
-
-    def apply(self, point, camera):
-        return [Vector3(point.x, point.y, point.z), True]

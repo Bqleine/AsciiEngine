@@ -1,12 +1,13 @@
-from math import sqrt, exp, sin, cos
+from math import sqrt, sin, cos
+
 
 class Vector3:
-    
+
     def __init__(self, x=0, y=0, z=0):
         self.x = x
         self.y = y
         self.z = z
-        
+
     def __str__(self):
         return "Vector3(" + str(self.x) + ", " + str(self.y) + ", " + str(self.z) + ")"
 
@@ -25,13 +26,11 @@ class Vector3:
 
     def add(self, vector):
         return Vector3(self.x + vector.x, self.y + vector.y, self.z + vector.z)
-        
-    def applyPerspective(self, camera):
 
+    def applyPerspective(self, camera):
         return camera.perspective.apply(self, camera)
 
     def applyRotation(self, rotation, origin):
-
         point = self.add(Vector3(-origin.x, -origin.y, -origin.z))
 
         point = point.applyYRotation(rotation).applyXRotation(rotation)
