@@ -1,6 +1,7 @@
 import curses
 from math import floor
 from time import monotonic
+from src.gamemode import Gamemode
 
 
 class Window:
@@ -16,13 +17,17 @@ class Window:
         self.lastSecond = 0
         self.framesPassed = 1
         self.startTime = 0
+        self.paused = False
+        self.gamemode = Gamemode()
 
-        self.stdscr = curses.initscr()
-        self.stdscr.keypad(True)
+        self.window = curses.initscr()
+        self.window.keypad(True)
+        self.window.nodelay(True)
         curses.noecho()
         curses.cbreak()
+        curses.curs_set(0)
 
-        self.window = curses.newwin(curses.LINES - 1, curses.COLS - 1, 0, 0)
+        #self.window = curses.newwin(curses.LINES - 1, curses.COLS - 1, 0, 0)
 
         self.logs = []
 
@@ -47,6 +52,10 @@ class Window:
             if self.lastFrame >= self.time - (1 / self.targetFps):
                 continue
 
+            self.processInputs()
+
+            if self.paused: continue
+
             self.tick()
             self.updateScreen()
 
@@ -55,6 +64,11 @@ class Window:
         self.stdscr.keypad(False)
         curses.echo()
         curses.endwin()
+
+    def processInputs(self):
+        ch = self.window.getch()
+        if ch != -1:
+            self.gamemode.onInput(ch, self)
 
     def tick(self):
 
@@ -66,8 +80,10 @@ class Window:
 
         self.windowSize = self.getTerminalSize()
 
+        deltaTime = 30 / self.targetFps
         for obj in self.objects:
-            obj.tick(30 / self.targetFps, self.framesPassed)
+            obj.tick(deltaTime, self)
+        self.gamemode.tick(deltaTime, self)
 
         self.framesPassed += 1
         self.framesLastSecond += 1
@@ -85,6 +101,15 @@ class Window:
 
     def addObject(self, object):
         self.objects.append(object)
+
+    def removeObject(self, object):
+        self.objects.remove(object)
+
+    def pause(self):
+        self.paused = True
+
+    def unpause(self):
+        self.paused = False
 
     def drawCharacter(self, character, position, attr=curses.COLOR_WHITE):
         y = floor(position.y)

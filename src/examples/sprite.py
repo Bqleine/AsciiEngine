@@ -7,7 +7,7 @@ from src.utils.fpsDisplay import FpsDisplay
 import curses
 import os
 
-window = Window(1000, Camera(FlatPerspective(), Vector3(0, 0)))
+window = Window(120, Camera(FlatPerspective(), Vector3(0, 0)))
 
 sprite = " O \n" \
          "-|-\n" \

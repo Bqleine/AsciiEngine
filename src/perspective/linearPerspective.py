@@ -1,5 +1,6 @@
 from src.perspective.perspective import Perspective
-
+from src.position import Vector3
+import curses
 
 class LinearPerspective(Perspective):
 

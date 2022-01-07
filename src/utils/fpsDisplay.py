@@ -7,5 +7,5 @@ class FpsDisplay(Text):
         super().__init__("", position)
 
     def draw(self, window):
-        self.text = "Fps: " + str(window.fps) + "/" + str(window.targetFps)
+        self.text = "Fps: " + str(window.fps) + "/" + str(window.targetFps) + " | Objects: " + str(len(window.objects))
         super().draw(window)

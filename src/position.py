@@ -33,7 +33,7 @@ class Vector3:
     def applyRotation(self, rotation, origin):
         point = self.add(Vector3(-origin.x, -origin.y, -origin.z))
 
-        point = point.applyYRotation(rotation).applyXRotation(rotation)
+        point = point.applyZRotation(rotation).applyYRotation(rotation).applyXRotation(rotation)
 
         return point.add(Vector3(origin.x, origin.y, origin.z))
 
@@ -54,3 +54,12 @@ class Vector3:
         z = self.z * rCos + self.x * rSin
 
         return Vector3(x, self.y, z)
+
+    def applyZRotation(self, rotation):
+        rSin = sin(rotation.roll)
+        rCos = cos(rotation.roll)
+
+        x = self.x * rCos - self.y * rSin
+        y = self.y * rCos - self.x * rSin
+
+        return Vector3(x, y, self.z)
